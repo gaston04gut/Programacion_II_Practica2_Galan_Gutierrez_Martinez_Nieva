@@ -3,98 +3,166 @@ package Ejercicio1Carrera;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
+// Clase que representa una carrera
 public class Carrera {
+
     private double distancia;
-    private List<Atleta> competidores;//collection
 
-    // constructor 
-    public Carrera (double distancia){
-     this.distancia=distancia;
-     this.competidores= new ArrayList<>();//inicializamos la lista vacia
+    // Coleccion de atletas
+    private ArrayList<Atleta> competidores;
+
+    public Carrera(double distancia) {
+
+        this.distancia = distancia;
+        competidores = new ArrayList<Atleta>();
     }
 
-    public void agregarAtleta (Atleta atleta){ //agregar atletas
-      competidores.add (atleta);
+    // Agrega un atleta a la carrera
+    public void agregarAtleta(Atleta atleta) {
+
+        competidores.add(atleta);
     }
-    public List<Atleta> getCompetidores(){
-        return competidores;
+
+    // Punto d: cantidad de atletas
+    public int cantidadAtletas() {
+
+        return competidores.size();
     }
-    public double getDistancia (){
-        return distancia;
-    }
+
+    // Punto e: mostrar todos los competidores
     public void mostrarCompetidores() {
-     System.out.println("=== LISTA DE COMPETIDORES ===");
-     for (Atleta a : competidores) {
-        System.out.println(a);
-    }
-}
-    public Atleta obtenerGanador() {
 
-     if (competidores.isEmpty()) {
-        return null; // Si no hay atletas, devuelve nulo de forma segura
-     }
-     
-     Atleta ganador = competidores.get(0); // el primero de la lista
-    
-     for (Atleta a : competidores) {
-        if (a.getTiempo() < ganador.getTiempo()) {
-            ganador = a; // Si es menor, lo actualizamos como el nuevo ganador
-        }}
-      return ganador; 
-    }
-    public int contarYMostrarUruguayos() {
-      int contador = 0;
-      System.out.println(" ATLETAS DE NACIONALIDAD URUGUAYA");
+        for (Atleta atleta : competidores) {
 
-     for (Atleta a: competidores) {
-        if (a.getNacionalidad().equalsIgnoreCase("Uruguaya")) {
-            System.out.println(a); // Muestra los datos del atleta
-            contador++; 
-        }}
-        return contador;
-    }
-
-    public void ordenarYMostrarPorNombre() {
-
-     competidores.sort(Comparator.comparing(Atleta::getNombre));
-    
-    System.out.println("=== ATLETAS ORDENADOS ===");
-    for (Atleta a : competidores) {
-        System.out.println(a);
-    }}
-   public Atleta buacarArgentinoMenor(){
-        System.out.println(" Atletas de Nacionalidad Argentina y menor edad");
-        LocalDate hoy = LocalDate.now();
-        for (Atleta a :competidores ){
-          boolean esArgentino ="Argentino".equalsIgnoreCase(a.getNacionalidad());
-          
-          int edad = Period.between(a.getFechaNacimiento(), hoy).getYears();
-
-        if (esArgentino && edad < 18) {
-        return a; 
-        }}
-    return null; 
-   }
-    public Atleta obtenerUltimoEnLlegar() {
-     if (competidores.isEmpty()) {
-        return null;
-    }
-    Atleta ultimo = competidores.get(0); 
-    for (Atleta a : competidores) {
-        if (a.getTiempo() > ultimo.getTiempo()) {
-            ultimo = a;
+            atleta.mostrarDatos();
         }
     }
-    return ultimo;
+
+    // Punto f: determinar ganador
+    // El menor tiempo es el ganador
+    public Atleta obtenerGanador() {
+
+        if (competidores.isEmpty()) {
+            return null;
+        }
+
+        Atleta ganador = competidores.get(0);
+
+        for (Atleta atleta : competidores) {
+
+            if (atleta.getTiempo() < ganador.getTiempo()) {
+
+                ganador = atleta;
+            }
+        }
+
+        return ganador;
     }
-    
-    public boolean existeAtletaPeruano() {
-    for (Atleta a : competidores) {
-        if ("Peruana".equalsIgnoreCase(a.getNacionalidad()) || "Peruano".equalsIgnoreCase(a.getNacionalidad())) {
-        return true;}}
-    return false; 
+
+    // Punto g: atletas uruguayos
+    public void mostrarUruguayos() {
+
+        int cantidad = 0;
+
+        for (Atleta atleta : competidores) {
+
+            if (atleta.getNacionalidad()
+                    .equalsIgnoreCase("Uruguaya")
+                    || atleta.getNacionalidad()
+                    .equalsIgnoreCase("Uruguay")) {
+
+                atleta.mostrarDatos();
+                cantidad++;
+            }
+        }
+
+        System.out.println("Cantidad de atletas uruguayos: " + cantidad);
+    }
+
+    // Punto h: ordenar por nombre
+    public void ordenarPorNombre() {
+
+        Collections.sort(competidores, new Comparator<Atleta>() {
+
+            @Override
+            public int compare(Atleta atleta1, Atleta atleta2) {
+
+                return atleta1.getNombre()
+                        .compareToIgnoreCase(atleta2.getNombre());
+            }
+        });
+    }
+
+    // Punto i: primer argentino menor de edad
+    public Atleta primerArgentinoMenorEdad() {
+
+        LocalDate hoy = LocalDate.now();
+
+        for (Atleta atleta : competidores) {
+
+            if (atleta.getNacionalidad()
+                    .equalsIgnoreCase("Argentina")
+                    || atleta.getNacionalidad()
+                    .equalsIgnoreCase("Argentino")) {
+
+                int edad = Period.between(
+                        atleta.getFechaNacimiento(),
+                        hoy
+                ).getYears();
+
+                if (edad < 18) {
+
+                    return atleta;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    // Punto j: atleta que salió último
+    // El mayor tiempo corresponde al último
+    public Atleta obtenerUltimo() {
+
+        if (competidores.isEmpty()) {
+            return null;
+        }
+
+        Atleta ultimo = competidores.get(0);
+
+        for (Atleta atleta : competidores) {
+
+            if (atleta.getTiempo() > ultimo.getTiempo()) {
+
+                ultimo = atleta;
+            }
+        }
+
+        return ultimo;
+    }
+
+    // Punto k: existe algún peruano
+    public boolean existePeruano() {
+
+        for (Atleta atleta : competidores) {
+
+            if (atleta.getNacionalidad()
+                    .equalsIgnoreCase("Peruana")
+                    || atleta.getNacionalidad()
+                    .equalsIgnoreCase("Peru")) {
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public ArrayList<Atleta> getCompetidores() {
+
+        return competidores;
     }
 }

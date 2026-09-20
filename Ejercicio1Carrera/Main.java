@@ -3,85 +3,128 @@ package Ejercicio1Carrera;
 import java.time.LocalDate;
 import java.util.Scanner;
 
+// Programa principal
 public class Main {
-    public static void  main(String[] args) {
-        Scanner scanner=new Scanner(System.in);
-        Carrera carrera=new Carrera(200.0);
 
-        System.out.print("=== REGISTRO DE ATLETA ===");
+    public static void main(String[] args) {
 
-        //nombre
-        System.out.print("Ingrese el nombre del atleta:");
-        String nombre = scanner.nextLine();
+        Scanner teclado = new Scanner(System.in);
 
-        // número
-        System.out.print("Ingrese el número del atleta: ");
-        int numero = scanner.nextInt();
-        scanner.nextLine();
+        Carrera carrera = new Carrera(100);
 
-        // nacionalidad
-        System.out.print("Ingrese la nacionalidad: ");
-        String nacionalidad = scanner.nextLine();
+        // Datos de prueba
+        carrera.agregarAtleta(new Atleta(
+                "Juan",
+                1,
+                "Argentina",
+                LocalDate.of(2010, 5, 10),
+                12.5
+        ));
 
-        // fecha de nacimiento
-        System.out.print("Año de nacimiento : ");
-        int año = scanner.nextInt();
-        System.out.print("Mes de nacimiento : ");
-        int mes = scanner.nextInt();
-        System.out.print("Día de nacimiento : ");
-        int dia = scanner.nextInt();
-        LocalDate fechaNacimiento = LocalDate.of(año, mes, dia);
-        //tiempo
-        System.out.print("Ingrese el tiempo en segundos: ");
-        double tiempo = scanner.nextDouble();
+        carrera.agregarAtleta(new Atleta(
+                "Pedro",
+                2,
+                "Uruguaya",
+                LocalDate.of(1999, 3, 15),
+                11.2
+        ));
 
-        Atleta atleta = new Atleta(nombre,numero, nacionalidad,fechaNacimiento,tiempo);
-        carrera.agregarAtleta(atleta);
-        
-        System.out.println("¡Atleta registrado con éxito!");
+        carrera.agregarAtleta(new Atleta(
+                "Lucia",
+                3,
+                "Argentina",
+                LocalDate.of(2005, 8, 20),
+                10.8
+        ));
 
-        System.out.println("La cantidad de atletas en la carrera son: " + carrera.getCompetidores().size());
-        
-        System.out.println("el listado de los COMPETIDORES :");
-        carrera.mostrarCompetidores();
+        carrera.agregarAtleta(new Atleta(
+                "Carlos",
+                4,
+                "Peruana",
+                LocalDate.of(1998, 7, 12),
+                14.3
+        ));
 
-        Atleta ganador = carrera.obtenerGanador();
-        if (ganador != null) {
-         System.out.println("\n=== ¡GANADOR DE LA CARRERA! ===");
-         System.out.println(ganador); // Esto llama al toString() de Atleta con sus datos
-         System.out.println("Tiempo registrado: " + ganador.getTiempo() + " segundos");
-         } else {
-         System.out.println("No hay atletas registrados en la carrera.");
-         }
-    
-        int totalUruguayos = carrera.contarYMostrarUruguayos();
-        System.out.println("Cantidad total de atletas uruguayos: " + totalUruguayos);
+        int opcion = 0;
 
-        carrera.ordenarYMostrarPorNombre();
-        
-        Atleta primerMenorArg = carrera.buacarArgentinoMenor();
+        while (opcion != 8) {
 
-        if (primerMenorArg != null) {
-            System.out.println("PRIMER ATLETA ARGENTINO MENOR DE EDAD ");
-            System.out.println(primerMenorArg);
-        } else {
-            System.out.println("No se encontró ningún atleta argentino menor de edad.");
+            System.out.println();
+            System.out.println("===================================");
+            System.out.println("        CARRERA DE VELOCIDAD");
+            System.out.println("===================================");
+            System.out.println("1. Mostrar competidores");
+            System.out.println("2. Cantidad de atletas");
+            System.out.println("3. Mostrar ganador");
+            System.out.println("4. Mostrar atletas uruguayos");
+            System.out.println("5. Ordenar por nombre");
+            System.out.println("6. Primer argentino menor de edad");
+            System.out.println("7. Atleta que salio ultimo");
+            System.out.println("8. Salir");
+            System.out.print("Ingrese una opcion: ");
+
+            opcion = teclado.nextInt();
+
+            switch (opcion) {
+
+                case 1:
+                    carrera.mostrarCompetidores();
+                    break;
+
+                case 2:
+                    System.out.println(
+                            "Cantidad: "
+                            + carrera.cantidadAtletas()
+                    );
+                    break;
+
+                case 3:
+                    Atleta ganador = carrera.obtenerGanador();
+
+                    if (ganador != null) {
+                        System.out.println("GANADOR:");
+                        ganador.mostrarDatos();
+                    }
+                    break;
+
+                case 4:
+                    carrera.mostrarUruguayos();
+                    break;
+
+                case 5:
+                    carrera.ordenarPorNombre();
+                    carrera.mostrarCompetidores();
+                    break;
+
+                case 6:
+                    Atleta argentino = carrera.primerArgentinoMenorEdad();
+
+                    if (argentino != null) {
+                        argentino.mostrarDatos();
+                    } else {
+                        System.out.println(
+                                "No existe un argentino menor de edad."
+                        );
+                    }
+                    break;
+
+                case 7:
+                    Atleta ultimo = carrera.obtenerUltimo();
+
+                    if (ultimo != null) {
+                        ultimo.mostrarDatos();
+                    }
+                    break;
+
+                case 8:
+                    System.out.println("Programa finalizado.");
+                    break;
+
+                default:
+                    System.out.println("Opcion incorrecta.");
+            }
         }
-        Atleta ultimoAtleta = carrera.obtenerUltimoEnLlegar();
 
-        if (ultimoAtleta != null) {
-          System.out.println("ATLETA QUE SALIÓ ÚLTIMO ===");
-          System.out.println(ultimoAtleta);
-          System.out.println("Tiempo registrado: " + ultimoAtleta.getTiempo() + " segundos");
-        } else {
-          System.out.println("No hay atletas registrados en la carrera.");
-        }
-        boolean hayPeruano = carrera.existeAtletaPeruano();
-
-        if (hayPeruano) {
-         System.out.println(" ATLETA PERUANO");
-         System.out.println("Sí, existe al menos un atleta de nacionalidad peruana en la carrera.");
-        } else {
-          System.out.println("No se encontró ningún atleta de nacionalidad peruana en la carrera.");
-        }
-    }}
+        teclado.close();
+    }
+}
